@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ploeh.AutoFixture;
 using System.Collections.Generic;
 using Ploeh.AutoFixture.Kernel;
+using System.Linq;
 
 namespace ImmutableWithout
 {
@@ -33,7 +34,7 @@ namespace ImmutableWithout
         public void FixtureCreateAssetMetadata_Should_Succeed()
         {
             var fixture = new Fixture();
-            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            fixture.Inject(Enumerable.Empty<Asset>());
             fixture.Customizations.Add(
                 new TypeRelay(
                     typeof(IReadOnlyCollection<Asset>),
@@ -41,7 +42,7 @@ namespace ImmutableWithout
 
             var metadata = fixture.Create<AssetMetadata>();
             Assert.IsNotNull(metadata);
-            Assert.AreNotEqual(0, metadata.Assets.Count);
+            Assert.AreEqual(0, metadata.Assets.Count);
         }
     }
 }
